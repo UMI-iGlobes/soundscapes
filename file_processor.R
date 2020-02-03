@@ -1,24 +1,23 @@
 # Title     : file_processor.R
 # Objective : Read WAV files from harddrive and compute features for analysis.
-# Created by: Biosphere
+# Created by: Colton Flowers (UMI/iGlobes)
 # Created on: 1/24/2020
-CHECKMARK<-50
-WRITE_TO_FILE_PATH<-"D:\\data_library\\index_data.csv"
-DATA_LIBRARY_PATH<- "D:\\data_library"
+CHECKMARK<-1
+TIME_INTERVAL<- 5
+##time interval to calculate indices in minutes. WARNING: if the duration of a file is not divisible by TIME_INTERVAL, the last interval of the file will not be calculated.
+WRITE_TO_FILE_PATH<-paste("D:\\data_library\\index_data","_ti=",TIME_INTERVAL,sep="")
+DATA_LIBRARY_PATH<- "D:/data_library"
+LOG_FILE<-"D:\\data_library\\log_file"
 source("utils.R")
 #install sound processing packages if not already present
 #install.packages(c("signal","tuneR","seewave"))
 #install.packages(c("soundecology"))
 #install.packages(c("rpanel","rgl"))
-library(tuneR)
-library(seewave)
-library(soundecology)
 ##provide path to data_library below:
-
 ##get all wav file names
 file.paths <-list.files(DATA_LIBRARY_PATH,recursive=TRUE, pattern = "wav$")
 file.names<-sapply(file.paths,function(path) {return(unlist(strsplit(path, "/"))[3])},USE.NAMES=FALSE)
-file.namedata = songmeter(file.names)
+file.namedata <- songmeter(file.names)
 #print(file.namedata)
 ##initalize data.frame to store indices.
 index_data <- data.frame(Site=character(),
@@ -35,7 +34,10 @@ index_data <- data.frame(Site=character(),
                  nrows<-double(),
                  ndsi<-double(),
                  stringsAsFactors=FALSE)
+print("Running...")
 for (i in 1:length(file.paths))
+
+  ###tryCatch used so that preprocessing continues even if an error/warning is thrown at a single(possibly several) iterations.
   { tryCatch({
     year <- file.namedata[i,"year"]
     month <- file.namedata[i,"month"]
@@ -46,25 +48,40 @@ for (i in 1:length(file.paths))
 
     site <- unlist(strsplit(file.paths[i], "/"))[1]
     date <- paste(year,month,day,sep="/")
-    time <- paste(hour,min,sec,sep=":")
 
-    indices <- alpha_indices(file.paths[i])
-    index_data[i,] <- c(site,date,time,indices)
-    if (i %% 50 == 0) {
-    write.csv(index_data, file = WRITE_TO_FILE_PATH, row.names=FALSE)
-    print(paste("CHECKMARKED @ ",i,"/",length(file.paths)))
+    file_path<- paste(DATA_LIBRARY_PATH,file.paths[i],sep="/")
+    hdr <- readWave(file_path,header=TRUE)
+    print(file_path)
+    sr <- hdr$sample.rate
+    samples<-hdr$samples
+    duration <- sr/samples
+    n_recordings <- duration%/%TIME_INTERVAL
+    for (i in 0:n_recordings-1){
+      start_time<-i*TIME_INTERVAL
+      end_time<-(i+1)*TIME_INTERVAL
+      time <- paste(hour,min,sec,sep=":")
+      indices <- alpha_indices(file_path)
+      index_data[i,] <- c(site,date,time,indices)
+       }
+    ###
+    if (i %% CHECKMARK == 0) {
+    ##checkmarks the preprocessing by flushing already-processed data to a csv file.
+      write.csv(index_data, file = WRITE_TO_FILE_PATH, row.names=FALSE)
+      print(paste("CHECKMARKED @ ",i,"/",length(file.paths)))}
+
+
+
     }
-    }
-    , error=function(e){
+    },error=function(e){
       message("Caught an error at iteration: ",i," site:",site," date:",date," time:",time)
       print(e)
-      write_to_log_file(e,logger_Level="ERR")
-    }
-    , warning = function(w){
+      write_to_log_file(paste(e," @ iteration",i),logger_level="ERR")
+    },warning = function(w){
       message('Caught a warning at iteration: ',i," site:",site," date:",date," time:",time)
       print(w)
-      write_to_log_file(w, logger_level = "WARN")
-    }
-)
+      write_to_log_file(paste(w," @ iteration",i), logger_level = "WARN")
+    })
 }
-write.csv(index_data, file = WRITE_TO_FILE_PATH, row.names=FALSE)
+print("Writing to CSV...")
+write.csv(index_data, file = paste(WRITE_TO_FILE_PATH, row.names=FALSE)
+print("Done!")
