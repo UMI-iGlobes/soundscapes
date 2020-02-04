@@ -5,9 +5,9 @@
 library(tuneR)
 library(seewave)
 library(soundecology)
-alpha_indices <- function(x) {
+alpha_indices <- function(x,start_time,end_time) {
   ##computes alpha_indices for a given filename corresponding to a wav_file and then returns these indices in a vector.
-  x <- readWave(x)
+  x <- readWave(x,from=start_time,to=end_time,units="minutes")
   x <- mono(x,which='left')
   ms <- meanspec(x,plot=FALSE)
   ba <- bioacoustic_index(x,min_freq=500,max_freq=12000) #bioacoustic index;left channel:asseses relative avian abundance, area under curve between 2000 and 8000
