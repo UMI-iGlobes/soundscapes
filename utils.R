@@ -10,7 +10,7 @@ alpha_indices <- function(x,start_time,end_time) {
   x <- readWave(x,from=start_time,to=end_time,units="minutes")
   x <- mono(x,which='left')
   ms <- meanspec(x,plot=FALSE)
-  ba <- bioacoustic_index(x,min_freq=500,max_freq=12000) #bioacoustic index;left channel:asseses relative avian abundance, area under curve between 2000 and 8000
+  ba <- bioacoustic_index(x,min_freq=500,max_freq=12000)$left_area #bioacoustic index;left channel:asseses relative avian abundance, area under curve between 2000 and 8000
   print("bioacoustic index calculated")
   amp <- M(x) #amplitude index
   print("amplitude index calculated")
@@ -20,9 +20,9 @@ alpha_indices <- function(x,start_time,end_time) {
   print("spectral entropy calculated")
   ae <- H(x)#acoustic entropy index
   print("acoustic entropy calculated")
-  ad <- acoustic_diversity(x)#acoustic diversity:left channel
+  ad <- acoustic_diversity(x)$adi_left#acoustic diversity:left channel
   print("acoustic diversity calculated")
-  aeve <- acoustic_evenness(x)#acoustic evenness;left channel:
+  aeve <- acoustic_evenness(x)$aei_left#acoustic evenness;left channel:
   print("acoustic evenness calculated")
   ac <- ACI(x)#acoustic complexity index:gives more importance to sounds that are modulated in amplitude
   print("acoustic complexity calculated")
