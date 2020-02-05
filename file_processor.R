@@ -72,10 +72,10 @@ for (i in 1:length(file.paths)){
       overall_start_hour<- hour + ((min + start_min_in_file) %/% 60)
       overall_start_min <- (min + start_min_in_file) %% 60
       time <- paste(overall_start_hour,overall_start_min,sec,sep=":")
-      sink("sink.txt",type="output")
+      sink("D:/data_library/sink.txt",type="output")
       indices <- alpha_indices(file_path,start_min_in_file,end_min_in_file)
       sink()
-      print(indices)
+      #print(indices)
       #print(indices)
       #indices<-rep(0,10)
       index_data[total_recordings,] <- c(site,date,time,indices)
