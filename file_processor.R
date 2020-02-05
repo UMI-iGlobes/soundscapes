@@ -41,7 +41,7 @@ error_cases <- data.frame(Site=character(),
                           Time=character()
 )
 for (i in 1:length(file.paths)){
-
+  start_time <- Sys.time()
   ###tryCatch used so that preprocessing continues even if an error/warning is thrown at a single(possibly several) iterations.
   { tryCatch({
     year <- file.namedata[i,"year"]
@@ -62,16 +62,20 @@ for (i in 1:length(file.paths)){
     duration <- samples/sr
     #print(paste('duration ',duration))
     n_recordings <- duration%/%(TIME_INTERVAL*60)
+
     if (n_recordings < TIME_INTERVAL) next
     for (j in 0:(n_recordings-1)){
-      print(j)
       total_recordings<- total_recordings +1
+      print(total_recordings)
       start_min_in_file<-j*TIME_INTERVAL
       end_min_in_file<-(j+1)*TIME_INTERVAL
       overall_start_hour<- hour + ((min + start_min_in_file) %/% 60)
       overall_start_min <- (min + start_min_in_file) %% 60
       time <- paste(overall_start_hour,overall_start_min,sec,sep=":")
+      sink("sink.txt",type="output")
       indices <- alpha_indices(file_path,start_min_in_file,end_min_in_file)
+      sink()
+      print(indices)
       #print(indices)
       #indices<-rep(0,10)
       index_data[total_recordings,] <- c(site,date,time,indices)
@@ -93,7 +97,11 @@ for (i in 1:length(file.paths)){
       write_to_log_file(paste(w," @ iteration",i), logger_level = "WARN")
       error_cases[total_recordings,] <- c(site,date,time)
     })
+
 }
+end_time = Sys.time()
+print(i)
+print(start_time-end_time)
 }
 print("Writing to CSV...")
 write.csv(index_data, file = WRITE_TO_FILE_PATH,row.names=FALSE)
