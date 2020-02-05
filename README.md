@@ -1,6 +1,8 @@
-#Classifying Sonoran Soundscapes
-###Using Machine Learning Methods to Characterize and Classify Soundscapes
-#####Alpha Indices Calculated: 
+# Classifying Sonoran Soundscapes
+
+### Using Machine Learning Methods to Characterize and Classify Soundscapes
+
+##### Alpha Indices Calculated: 
 * Bioacoustic Index
 * Amplitude Index
 * Temporal Entropy Index
