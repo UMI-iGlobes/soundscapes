@@ -1,6 +1,6 @@
 # Title     : utils.R
 # Objective : helper funtions; alpha indexer: calculates alpha indices for a given wav file and saves them to an array.;write_to_log: write error handling information to a log.
-# Created by: Colton Flowers (UMI/iGlobes
+# Created by: Colton Flowers (UMI/iGlobes)
 # Created on: 1/27/2020
 library(tuneR)
 library(seewave)

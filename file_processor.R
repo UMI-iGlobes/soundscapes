@@ -11,9 +11,9 @@ DATA_LIBRARY_PATH<- "D:/data_library"
 LOG_FILE<-"D:/data_library/log_file.txt"
 source("utils.R")
 #install sound processing packages if not already present
-#install.packages(c("signal","tuneR","seewave"))
-#install.packages(c("soundecology"))
-#install.packages(c("rpanel","rgl"))
+install.packages(c("signal","tuneR","seewave"))
+install.packages(c("soundecology"))
+install.packages(c("rpanel","rgl"))
 ##provide path to data_library below:
 ##get all wav file names
 file.paths <-list.files(DATA_LIBRARY_PATH,recursive=TRUE, pattern = "wav$")
