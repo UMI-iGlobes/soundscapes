@@ -4,6 +4,14 @@
 # Created on: 2/5/2020
 source("utils.R")
 TIME_INTERVAL=5
+<<<<<<< HEAD
+direc <-list.files("./",recursive=TRUE, pattern = "wav$")
+#print(direc)
+path <- direc
+#print(path)
+if (file.exists("output/out.csv")){
+  index_data <- read.csv("output/out.csv", header = TRUE, sep = ",",stringsAsFactors=FALSE)
+=======
 #args = commandArgs(trailingOnly=TRUE)
 args <- c("/home/colton/Music/S4A07275_20190418_111236.wav","out.csv")
 # test if there is at least one argument: if not, return an error
@@ -16,6 +24,7 @@ if (length(args)==0) {
 path=args[1]
 if (file.exists("out.csv")){
   index_data <- read.csv("out.csv", header = TRUE, sep = ";",stringsAsFactors=FALSE)
+>>>>>>> d937ebb486c4766760ff97c9a350ee60913dbc1a
 } else {
   index_data <- data.frame(Site=character(),
                  Date<-as.Date(character(),format="%Y/%m/%d"),
@@ -32,6 +41,19 @@ if (file.exists("out.csv")){
                  ndsi<-double(),
                  stringsAsFactors=FALSE)
 }
+<<<<<<< HEAD
+#print(ncol(index_data))
+total_recordings <- nrow(index_data)
+#print(total_recordings)
+file.name <- tail(unlist(strsplit(path, "/")),n=1)
+file.songmetername<- tail(unlist(strsplit(file.name,"_")))
+len <- length(file.songmetername)
+name <- paste(file.songmetername[len-2],file.songmetername[len-1],file.songmetername[len],sep="_")
+sitelist <- file.songmetername[1:(len-3)]
+site <- paste(sitelist[1],sitelist[2],sep="_")
+print(site)
+file.namedata <- songmeter(name)
+=======
 print(ncol(index_data))
 total_recordings <- nrow(index_data)
 print(total_recordings)
@@ -39,6 +61,7 @@ file.name <- tail(unlist(strsplit(path, "/")),n=1)
 site <- tail(unlist(strsplit(path, "/")),n=3)[1]
 print(site)
 file.namedata <- songmeter(file.name)
+>>>>>>> d937ebb486c4766760ff97c9a350ee60913dbc1a
 year <- file.namedata[1,"year"]
 month <- file.namedata[1,"month"]
 day <- file.namedata[1,"day"]
@@ -78,4 +101,8 @@ if (duration > TIME_INTERVAL) {
   }
 }
 print("Done!")
+<<<<<<< HEAD
+write.csv(index_data, file = "output/out.csv",row.names=FALSE)
+=======
 write.csv(index_data, file = args[2],row.names=FALSE)
+>>>>>>> d937ebb486c4766760ff97c9a350ee60913dbc1a
