@@ -1,56 +1,35 @@
 #!/bin/bash
 
 ### script to run an mpi job using 28 cores or less (using only one 28-core node)
-
+#PBS -I
 ### Set the job name
-#PBS -N alpha_index_calulation
+#PBS -N alpha_index_calulation_test
 
 ### Specify the group for this job
 ### List of PI groups available to each user can be found with "va" command
-PBS -W group_list=ua-hlt
+#PBS -W group_list=clu-ling
 
 ### Set the queue for this job as windfall or standard (adjust ### and #)
-###PBS -q standard
-PBS -q windfall
+#PBS -q standard
+###PBS -q windfall
 
 ### Set the number of nodes, cores and memory that will be used for this job
 ### select=1 is the node count, ncpus=28 are the cores in each node,
 ### mem=168gb is memory per node, pcmem=6gb is the memory per core - optional
-PBS -l select=1:ncpus=28:mem=168gb
+#PBS -l select=1:ncpus=2:mem=168gb
 
 ### Specify "wallclock time", hhh:mm:ss. Required field
-PBS -l walltime=03:00:00
-
+#PBS -l walltime=03:00:00
 ### Load required modules/libraries if needed (openmpi example)
 ### Use "module avail" command to list all available modules
-module load openmpi
-
-### set directory for job execution, ~netid = home directory path
-cd ~xdisk/coltonflowers/sounds
-
-module load singularity/3.2.1
+module load singulariy/3.2.1
 module load cuda10/10.1
 
+### set directory for job execution.
+cd /xdisk/coltonflowers
 
-files=(*/)
-total=${#files[@]}
-i=0
-for f in "${files[@]}"; do
-    i=$(( i + 1 ))
-    echo index $i
-    if index == $PBS_ARRAY_INDEX:
-        cd "$f"
-        echo "- Processing file: $f"
-        singularity run coltonflowers-test15.sif
+echo $INPUT_FILE $OUTPUT_FILE
 
-done
+singularity run coltonflowers_beta.sif $INPUT_FILE $OUTPUT_FILE
 
-###
-setenv MPI_DSM_DISTRIBUTE
-
-### run your executable program with begin and end date and time output
-date
-/usr/bin/time mpirun -np 28 ./mpi_hello_world
-date
-
-
+###echo $INPUT_FILE $OUTPUT_FILE
