@@ -1,0 +1,40 @@
+#!/bin/bash
+
+### script to run an mpi job using 28 cores or less (using only one 28-core node)
+### Set the job name
+
+
+### Specify the group for this job
+### List of PI groups available to each user can be found with "va" command
+#PBS -W group_list=clu-ling
+
+### Set the queue for this job as windfall or standard (adjust ### and #)
+#PBS -q el_standard
+###PBS -q windfall
+
+### Set the number of nodes, cores and memory that will be used for this job
+### select=1 is the node count, ncpus=28 are the cores in each node,
+### mem=168gb is memory per node, pcmem=6gb is the memory per core - optional
+#PBS -l select=1:ncpus=1:mem=6gb
+
+### Specify "wallclock time", hhh:mm:ss. Required field
+#PBS -l walltime=0:15:00
+### Load required modules/libraries if needed (openmpi example)
+### Use "module avail" command to list all available modules
+
+#PBS -J 1001-1309
+
+module load singularity
+
+### set directory for job execution.
+cd /xdisk/coltonflowers
+
+CurrentWavFile="$( sed "${PBS_ARRAY_INDEX}q;d" final_sounds/filenames )"
+
+FOLDER=$(echo "$CurrentWavFile" | awk -F'[.]' '{print $(NF-1)}')
+
+OUTPUT=output/$FOLDER.csv
+
+echo $FOLDER
+
+singularity run coltonflowers_beta.sif final_sounds/$CurrentWavFile $OUTPUT

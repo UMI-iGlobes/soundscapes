@@ -1,0 +1,3 @@
+###Creates Singularity Image from Docker Image
+BootStrap: docker
+From: coltonflowers/beta:latest
