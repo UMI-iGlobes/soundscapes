@@ -40,6 +40,7 @@ error_cases <- data.frame(Site=character(),
                           Date=character(),
                           Time=character()
 )
+length_dic= {}
 for (i in 1:length(file.paths)){
   start_time <- Sys.time()
   ###tryCatch used so that preprocessing continues even if an error/warning is thrown at a single(possibly several) iterations.
@@ -63,7 +64,7 @@ for (i in 1:length(file.paths)){
     #print(paste('duration ',duration))
     n_recordings <- duration%/%(TIME_INTERVAL*60)
 
-    if (n_recordings < TIME_INTERVAL) next
+    #if (n_recordings < TIME_INTERVAL) next
     for (j in 0:(n_recordings-1)){
       total_recordings<- total_recordings +1
       print(total_recordings)
