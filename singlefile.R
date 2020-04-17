@@ -18,6 +18,9 @@ if (file.exists(out)){
   index_data <- data.frame(Site=character(),
                  Date<-as.Date(character(),format="%Y/%m/%d"),
                  Time<-character(),
+                 File<-character(),
+                 Start_Time<-character(),
+                 End_time<-character(),
                  bioacoustic<-double(),
                  amplitude<-double(),
                  temporal_entropy<-double(),
@@ -67,7 +70,6 @@ n_recordings <- duration%/%(TIME_INTERVAL*60)
 if (duration > TIME_INTERVAL) {
   for (j in 0:(n_recordings-1)){
     total_recordings<- total_recordings +1
-    #print(total_recordings)
     start_min_in_file<-j*TIME_INTERVAL
     end_min_in_file<-(j+1)*TIME_INTERVAL
     overall_start_hour<- hour + ((min + start_min_in_file) %/% 60)
@@ -77,7 +79,7 @@ if (duration > TIME_INTERVAL) {
     indices <- alpha_indices(path,start_min_in_file,end_min_in_file)
     sink()
     print(indices)
-    index_data[total_recordings,] <- c(site,date,time,indices)
+    index_data[total_recordings,] <- c(site,date,time,file.name,start_min_in_file,end_min_in_file,indices)
 
   }
 }
