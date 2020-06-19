@@ -5,10 +5,10 @@
 CHECKMARK<-50
 TIME_INTERVAL<- 5
 ##time interval to calculate indices in minutes. WARNING: if the duration of a file is not divisible by TIME_INTERVAL, the last interval of the file will not be calculated.
-WRITE_TO_FILE_PATH<-paste("D:/data_library/index_data","_ti=",TIME_INTERVAL,".csv",sep="")
-WRITE_TO_ERROR_FILE_PATH<-paste("D:/data_library/error_cases","_ti=",TIME_INTERVAL,".csv",sep="")
-DATA_LIBRARY_PATH<- "D:/data_library"
-LOG_FILE<-"D:/data_library/log_file.txt"
+WRITE_TO_FILE_PATH<-paste("/media/colton/My Passport/jake_lockdown","_ti=",TIME_INTERVAL,".csv",sep="")
+WRITE_TO_ERROR_FILE_PATH<-paste("/media/colton/My Passport/jake_lockdown_data_errors.txt","_ti=",TIME_INTERVAL,".csv",sep="")
+DATA_LIBRARY_PATH<- "/media/colton/My Passport/jake_lockdown_data"
+LOG_FILE<-"/media/colton/My Passport/data_library/log_file.txt"
 source("utils.R")
 #install sound processing packages if not already present
 #install.packages(c("signal","tuneR","seewave"))
@@ -17,6 +17,7 @@ source("utils.R")
 ##provide path to data_library below:
 ##get all wav file names
 file.paths <-list.files(DATA_LIBRARY_PATH,recursive=TRUE, pattern = "wav$")
+print(file.paths)
 file.names<-sapply(file.paths,function(path) {return(tail(unlist(strsplit(path, "/")),n=1))},USE.NAMES=FALSE)
 file.namedata <- songmeter(file.names)
 ##initalize data.frame to store indices.
@@ -73,7 +74,7 @@ for (i in 1:length(file.paths)){
       overall_start_hour<- hour + ((min + start_min_in_file) %/% 60)
       overall_start_min <- (min + start_min_in_file) %% 60
       time <- paste(overall_start_hour,overall_start_min,sec,sep=":")
-      sink("D:/data_library/sink.txt",type="output")
+      sink("/media/colton/My Passport/data_library/sink.txt",type="output")
       indices <- alpha_indices(file_path,start_min_in_file,end_min_in_file)
       sink()
       #print(indices)
